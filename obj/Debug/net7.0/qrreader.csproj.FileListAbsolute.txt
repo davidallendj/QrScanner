@@ -1,0 +1,5 @@
+/home/david/Projects/qrreader/obj/Debug/net7.0/qrreader.csproj.AssemblyReference.cache
+/home/david/Projects/qrreader/obj/Debug/net7.0/qrreader.GeneratedMSBuildEditorConfig.editorconfig
+/home/david/Projects/qrreader/obj/Debug/net7.0/qrreader.AssemblyInfoInputs.cache
+/home/david/Projects/qrreader/obj/Debug/net7.0/qrreader.AssemblyInfo.cs
+/home/david/Projects/qrreader/obj/Debug/net7.0/qrreader.csproj.CoreCompileInputs.cache
