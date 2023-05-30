@@ -2,15 +2,15 @@
 using System.IO;
 using System.Diagnostics;
 using System.Net.Http.Headers;
-
-
+using System.Reflection;
 
 namespace QrScanner{
 
 	class Program{
 		static async Task<int> run_scan(){
+			string path = Path.Combine(Environment.CurrentDirectory, "client/qr_scan2.py");
 			Process p = new Process();
-			p.StartInfo = new ProcessStartInfo("/usr/bin/bpython", "client/qr_scan2.py")
+			p.StartInfo = new ProcessStartInfo("/usr/bin/bpython", path)
 			{
 				RedirectStandardOutput = true,
 				UseShellExecute = false,

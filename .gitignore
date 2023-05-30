@@ -4,3 +4,6 @@ client/bin/*
 client/obj/*
 server/bin/*
 server/obj/*
+*.editorconfig
+project.nuget.cache
+qrread.csproj.nuget.dgspec.json

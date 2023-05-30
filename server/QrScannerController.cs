@@ -1,4 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
+using MongoDB.Bson;
+using MongoDB.Driver;
 using QrScanner.Models;
 
 namespace server.Controllers;
@@ -9,8 +11,10 @@ public class QrScannerController : ControllerBase
 {
 	const string db_connection_url			= @"mongodb://localhost:27017";
 	const string db_name					= @"qr_scanner";
-	const string col_codes					= @"codes";
+	const string col_codes					= @"scans";
 	const string col_info					= @"info";
+	MongoClient client;
+	IMongoDatabase db;
 
 	public QrScannerController(){
 		client = new MongoClient(db_connection_url);
@@ -32,15 +36,27 @@ public class QrScannerController : ControllerBase
 		return Ok();
 	}
 
+
 	[HttpGet("scan")]
 	public async Task<IActionResult> scan(string code){
-		Console.WriteLine(code);
-		return Ok();
+		return await _store_code(code);
+	}
+
+	[HttpGet("codes")]
+	public async Task<ActionResult<List<QrCode>>> get_codes(){
+		return await _fetch_all_codes();
 	}
 
 
-	public async Task<IActionResult> _store_cost(string code){
-
+	public async Task<IActionResult> _store_code(string code){
+		Console.WriteLine(code);
+		QrCode qr_code = new();
+		qr_code.id = Guid.NewGuid().ToString();
+		// qr_code.timestamp = DateTime.Now;
+		qr_code.data = code;
+		var col = db.GetCollection<QrCode>(col_codes);
+		await col.InsertOneAsync(qr_code);
+		return Ok(code);
 	}
 
 
@@ -55,12 +71,12 @@ public class QrScannerController : ControllerBase
 		Console.WriteLine($"_fetch_code(): Fetching QR code from '{db_name}.{col_codes}'");
 		var col = db.GetCollection<QrCode>(col_codes);
 		var filter = Builders<QrCode>.Filter.Eq(field, value);
-		return await Ok(col.Find(filter).FirstOrDefaultAsync());
+		return Ok(await col.Find(filter).FirstOrDefaultAsync());
 	}
 
 
-	public async Task<ActionResult<List<QrCodes>>> _fetch_all_codes(){
-		var col = db.GetCollection<SurveyInfo>(col_info);
-		return await col.Find(new BsonDocument{}).ToListAsync();
+	public async Task<ActionResult<List<QrCode>>> _fetch_all_codes(){
+		var col = db.GetCollection<QrCode>(col_codes);
+		return await col.Find(f => true).ToListAsync();
 	}
 }
